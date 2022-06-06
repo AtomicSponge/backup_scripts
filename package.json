@@ -1,0 +1,25 @@
+{
+    "name": "@spongex/backup_scripts",
+    "version": "1.0.0",
+    "description": "Full system and folder backup scripts",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/wtfsystems/backup_scripts.git"
+    },
+    "keywords": [
+        "backup",
+        "workflow",
+        "script"
+    ],
+    "author": "Matthew Evans",
+    "license": "MIT",
+    "url": "https://www.npmjs.com/package/@spongex/backup_scripts",
+    "bugs": {
+        "url": "https://github.com/wtfsystems/backup_scripts/issues"
+    },
+    "homepage": "https://github.com/wtfsystems/backup_scripts#readme",
+    "bin": {
+        "sysbak": "./sysbak.js",
+        "localbak": "./localbak.js"
+    }
+}
