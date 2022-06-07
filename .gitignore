@@ -7,3 +7,6 @@ node_modules/
 
 .bakignore
 *_bak/
+
+.sysbak_config.json
+.localbak_config.json
