@@ -14,7 +14,9 @@ const wtf = require('_common')
  * Constants
  */
 const constants = {
-    SETTINGS_FILE: `.sysbak_config.json`
+    SETTINGS_FILE: `.sysbak_config.json`,
+    SETTINGS_LOCATION: ``,
+    LOG_LOCATION: ``
 }
 
 /*
@@ -22,6 +24,6 @@ const constants = {
  */
 process.stdout.write(`${wtf.colors.CYAN}System Backup Script${wtf.colors.CLEAR}\n\n`)
 
-const settings = wtf.loadSettings(constants.SETTINGS_FILE)
+const settings = wtf.loadSettings(`${constants.SETTINGS_LOCATION}/${constants.SETTINGS_FILE}`)
 
 process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
