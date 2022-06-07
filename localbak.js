@@ -13,6 +13,7 @@ const wtf = require('_common')
  * Constants
  */
 const constants = {
+    SETTINGS_FILE: `.localbak_config.json`,
     BACKUP_FOLDER: `_bak`
 }
 
@@ -21,6 +22,6 @@ const constants = {
  */
 process.stdout.write(`${wtf.colors.CYAN}Local Backup Script${wtf.colors.CLEAR}\n\n`)
 
-const settings = wtf.loadSettings(`${process.cwd()}/.localbak_config.json`)
+const settings = wtf.loadSettings(`${process.cwd()}/${constants.SETTINGS_FILE}`)
 
 process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
