@@ -10,11 +10,18 @@ const fs = require('fs')
 const shell = require('shelljs')
 const wtf = require('_common')
 
+/**
+ * Constants
+ */
+const constants = {
+    SETTINGS_FILE: `.sysbak_config.json`
+}
+
 /*
  * Main script
  */
 process.stdout.write(`${wtf.colors.CYAN}System Backup Script${wtf.colors.CLEAR}\n\n`)
 
-const settings = wtf.loadSettings(`.sysbak_config.json`)
+const settings = wtf.loadSettings(SETTINGS_FILE)
 
 process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
