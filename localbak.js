@@ -12,7 +12,7 @@ const wtf = require('_common')
 /**
  * Constants
  */
- const constants = {
+const constants = {
     BACKUP_FOLDER: `_bak`
 }
 
