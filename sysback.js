@@ -7,10 +7,14 @@
  */
 
 const fs = require('fs')
+const shell = require('shelljs')
 const wtf = require('_common')
 
 /*
  * Main script
  */
+process.stdout.write(`${wtf.colors.CYAN}System Backup Script${wtf.colors.CLEAR}\n\n`)
 
 const settings = wtf.loadSettings()
+
+process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)

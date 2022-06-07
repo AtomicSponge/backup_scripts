@@ -25,7 +25,9 @@ exports.colors = colors
  * Constants
  */
 const constants = {
-    SETTINGS_FILE: `.backup_scripts.json`,
+    SETTINGS_LOCATION: ``,
+    SETTINGS_FILE: `.sysbak_config.json`,
+    BACKUP_FOLDER: `_bak`
 }
 exports.constants = constants
 
