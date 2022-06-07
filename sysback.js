@@ -15,6 +15,6 @@ const wtf = require('_common')
  */
 process.stdout.write(`${wtf.colors.CYAN}System Backup Script${wtf.colors.CLEAR}\n\n`)
 
-const settings = wtf.loadSettings()
+const settings = wtf.loadSettings(`.sysbak_config.json`)
 
 process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)

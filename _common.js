@@ -22,16 +22,6 @@ const colors = {
 exports.colors = colors
 
 /**
- * Constants
- */
-const constants = {
-    SETTINGS_LOCATION: ``,
-    SETTINGS_FILE: `.sysbak_config.json`,
-    BACKUP_FOLDER: `_bak`
-}
-exports.constants = constants
-
-/**
  * Display an error message and exit script.
  * @param {String} message Message to display.
  */
@@ -46,12 +36,11 @@ exports.scriptError = scriptError
  * @returns Settings JSON object
  * @throws Error on fail then exits script
  */
-const loadSettings = () => {
+const loadSettings = (SETTINGS_FILE) => {
     try {
-        return JSON.parse(fs.readFileSync(
-            `${process.cwd()}/${constants.SETTINGS_FILE}`))
+        return JSON.parse(fs.readFileSync(SETTINGS_FILE))
     } catch (err) {
-        scriptError(`Can't find a local '${constants.SETTINGS_FILE}' configuration file.`)
+        scriptError(`Can't find a '${SETTINGS_FILE}' configuration file.`)
     }
 }
 exports.loadSettings = loadSettings
