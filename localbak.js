@@ -23,8 +23,6 @@ const processFolder = (location, backup_location, ignoreList) => {
     fs.mkdirSync(backup_location)
     fileList.forEach(item => {
         console.log(item.name)
-        //  Skip the backup folder
-        if(`${location}/${item.name}` == `${process.cwd()}/${constants.BACKUP_FOLDER}`) return
         //  Check for ignore
         if(ignoreList.find(ignore => { item.name == ignore})) return
         //  Process the item
