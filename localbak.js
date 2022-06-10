@@ -17,6 +17,17 @@ const constants = {
     BACKUP_FOLDER: `_backup`
 }
 
+const processFolder = (location, backup_location) => {
+    const fileList = fs.readdirSync(process.cwd(), { withFileTypes: "true" })
+    fileList.forEach(item => {
+        //  Check for ignore
+        if(item.isDirectory()) {
+            //  create folder in backup location
+            processFolder(`${location}/${item.name}`, `${backup_location}/${item.name}`)
+        } else fs.copyFileSync(`${location}/${item.name}`, `${backup_location}/${item.name}`)
+    })
+}
+
 /*
  * Main script
  */
@@ -24,6 +35,13 @@ process.stdout.write(`${wtf.colors.CYAN}Local Backup Script${wtf.colors.CLEAR}\n
 
 const settings = wtf.loadSettings(`${process.cwd()}/${constants.SETTINGS_FILE}`)
 
+//  Overrwite backup name if exists in settings
 if(settings['backup_name']) constants.BACKUP_FOLDER = settings['backup_name']
+
+//  Remove old backup
+fs.rmSync(`${process.cwd()}/${constants.BACKUP_FOLDER}`, {recursive: true, force: true})
+
+//  Process the backup
+processFolder(process.cwd(), constants.BACKUP_FOLDER)
 
 process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
