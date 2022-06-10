@@ -18,7 +18,7 @@ const constants = {
 }
 
 const processFolder = (location, backup_location) => {
-    const fileList = fs.readdirSync(process.cwd(), { withFileTypes: "true" })
+    const fileList = fs.readdirSync(location, { withFileTypes: "true" })
     fileList.forEach(item => {
         //  Check for ignore
         if(item.isDirectory()) {
