@@ -17,18 +17,18 @@ const constants = {
     BACKUP_FOLDER: `_backup`
 }
 
-const processFolder = (location, backup_location, ignoreList) => {
+const processFolder = (location, backupLocation, ignoreList) => {
     if(ignoreList === undefined) ignoreList = []
     const fileList = fs.readdirSync(location, { withFileTypes: "true" })
-    fs.mkdirSync(backup_location)
+    fs.mkdirSync(backupLocation)
     fileList.forEach(item => {
         console.log(item.name)
         //  Check for ignore
         if(ignoreList.find(ignore => { item.name == ignore})) return
         //  Process the item
         if(item.isDirectory()) {
-            processFolder(`${location}/${item.name}`, `${backup_location}/${item.name}`, ignoreList)
-        } else fs.copyFileSync(`${location}/${item.name}`, `${backup_location}/${item.name}`)
+            processFolder(`${location}/${item.name}`, `${backupLocation}/${item.name}`, ignoreList)
+        } else fs.copyFileSync(`${location}/${item.name}`, `${backupLocation}/${item.name}`)
     })
 }
 
