@@ -36,11 +36,11 @@ exports.scriptError = scriptError
  * @returns Settings JSON object
  * @throws Error on fail then exits script
  */
-const loadSettings = (SETTINGS_FILE) => {
+const loadSettings = (SETTINGS_FILE, noerror) => {
     try {
         return JSON.parse(fs.readFileSync(SETTINGS_FILE))
     } catch (err) {
-        scriptError(`Can't find a '${SETTINGS_FILE}' configuration file.`)
+        if(!noerror) scriptError(`Can't find a '${SETTINGS_FILE}' configuration file.`)
     }
 }
 exports.loadSettings = loadSettings

@@ -20,9 +20,10 @@ const constants = {
 const processFolder = (location, backup_location) => {
     const fileList = fs.readdirSync(location, { withFileTypes: "true" })
     fileList.forEach(item => {
+        if(`${location}/${item.name}` == `${process.cwd()}/${constants.BACKUP_FOLDER}`) return
         //  Check for ignore
         if(item.isDirectory()) {
-            //  create folder in backup location
+            fs.mkdirSync(`${backup_location}/${item.name}`)
             processFolder(`${location}/${item.name}`, `${backup_location}/${item.name}`)
         } else fs.copyFileSync(`${location}/${item.name}`, `${backup_location}/${item.name}`)
     })
@@ -33,7 +34,9 @@ const processFolder = (location, backup_location) => {
  */
 process.stdout.write(`${wtf.colors.CYAN}Local Backup Script${wtf.colors.CLEAR}\n\n`)
 
-const settings = wtf.loadSettings(`${process.cwd()}/${constants.SETTINGS_FILE}`)
+//  Check for a settings file
+var settings = wtf.loadSettings(`${process.cwd()}/${constants.SETTINGS_FILE}`, true)
+if(!settings) settings = {}
 
 //  Overrwite backup name if exists in settings
 if(settings['backup_name']) constants.BACKUP_FOLDER = settings['backup_name']
