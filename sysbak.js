@@ -7,16 +7,17 @@
  */
 
 const fs = require('fs')
+const os = require('os')
 const shell = require('shelljs')
-const wtf = require('_common')
+const wtf = require('./_common')
 
 /**
  * Constants
  */
 const constants = {
-    SETTINGS_FILE: `.sysbak_config.json`,
-    SETTINGS_LOCATION: ``,
-    LOG_LOCATION: ``
+    SETTINGS_FILE: `_config.json`,
+    SETTINGS_LOCATION: `${os.homedir()}/.sysbak`,
+    LOG_LOCATION: `${os.homedir()}/sysbak/log`
 }
 
 /*
