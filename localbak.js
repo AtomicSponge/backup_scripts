@@ -38,7 +38,7 @@ const processFolder = (location, backupLocation, ignoreList) => {
     fileList.forEach(item => {
         //  Check if the item is in the ignore list
         var ignoreMatch = false
-        ignoreList.forEach(ignore => { if(item.name == ignore) ignoreMatch = true })
+        ignoreList.forEach(ignore => { if(item.name == ignore) ignoreMatch = true; return })
         if(ignoreMatch) return
         //  Process the item
         if(item.isDirectory()) {
