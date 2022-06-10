@@ -8,7 +8,7 @@
 
 const fs = require('fs')
 const os = require('os')
-const shell = require('shelljs')
+const { exec } = require('child_process')
 const wtf = require('./_common')
 
 /**
@@ -17,7 +17,8 @@ const wtf = require('./_common')
 const constants = {
     SETTINGS_FILE: `_config.json`,
     SETTINGS_LOCATION: `${os.homedir()}/.sysbak`,
-    LOG_LOCATION: `${os.homedir()}/.sysbak/log`
+    LOG_LOCATION: `${os.homedir()}/.sysbak/log`,
+    LASTRUN_FILE: `lastrun`
 }
 
 /*
@@ -27,10 +28,19 @@ process.stdout.write(`${wtf.colors.CYAN}System Backup Script${wtf.colors.CLEAR}\
 
 const settings = wtf.loadSettings(`${constants.SETTINGS_LOCATION}/${constants.SETTINGS_FILE}`)
 
+settings['jobs'].forEach(job => {
+    exec(settings['backup_command'], (error, stdout, stderr) => {
+        //
+    })
+})
+
 try {
-    fs.unlinkSync(`${constants.SETTINGS_LOCATION}/lastrun`)
+    fs.unlinkSync(`${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`)
 } catch (err) {}
 
-fs.appendFileSync(`${constants.SETTINGS_LOCATION}/lastrun`, new Date().toString())
+fs.appendFileSync(
+    `${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`,
+    new Date().toString()
+)
 
 process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
