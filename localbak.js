@@ -61,6 +61,7 @@ process.stdout.write(`${wtf.colors.CYAN}Local Backup Script${wtf.colors.CLEAR}\n
 //  Check for a settings file
 var settings = wtf.loadSettings(`${process.cwd()}/${constants.SETTINGS_FILE}`, true)
 if(!settings) settings = {}
+else process.stdout.write(`Loaded settings from a local '${constants.SETTINGS_FILE}' file.\n`)
 
 //  Overrwite backup name if exists in settings
 if(settings['backup_name']) constants.BACKUP_FOLDER = settings['backup_name']
