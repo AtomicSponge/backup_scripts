@@ -41,6 +41,11 @@ if(settings['backup_name']) constants.BACKUP_FOLDER = settings['backup_name']
 //  Remove old backup
 fs.rmSync(`${process.cwd()}/${constants.BACKUP_FOLDER}`, {recursive: true, force: true})
 
+//  Create the new backup folder
+try {
+    fs.mkdirSync(`${process.cwd()}/${constants.BACKUP_FOLDER}`)
+} catch (err) { wtf.scriptError(err) }
+
 //  Process the backup
 processFolder(process.cwd(), constants.BACKUP_FOLDER)
 
