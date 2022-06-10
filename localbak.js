@@ -22,7 +22,6 @@ const processFolder = (location, backupLocation, ignoreList) => {
     const fileList = fs.readdirSync(location, { withFileTypes: "true" })
     fs.mkdirSync(backupLocation)
     fileList.forEach(item => {
-        console.log(item.name)
         //  Check for ignore
         if(ignoreList.find(ignore => { item.name == ignore})) return
         //  Process the item
@@ -55,4 +54,4 @@ try {
     processFolder(process.cwd(), `${process.cwd()}/${constants.BACKUP_FOLDER}`, settings['ignore'])
 } catch (err) { wtf.scriptError(err) }
 
-process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
+process.stdout.write(`${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
