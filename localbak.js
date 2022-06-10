@@ -47,6 +47,6 @@ try {
 } catch (err) { wtf.scriptError(err) }
 
 //  Process the backup
-processFolder(process.cwd(), constants.BACKUP_FOLDER)
+processFolder(process.cwd(), `${process.cwd()}/${constants.BACKUP_FOLDER}`)
 
 process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
