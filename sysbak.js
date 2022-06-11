@@ -29,22 +29,22 @@ const constants = {
  * @param {Function} splicer The splicer function to edit the command
  * @param {Function} resolver Promise resolver function
  * @param {Function} rejector Promise rejector function
- * @returns {Array} An array of promises for each job
+ * @returns {Array} An array of results for each job
  */
 const jobRunner = async (jobs, command, splicer, resolver, rejector) => {
     var runningJobs = []
     jobs.forEach(job => {
         runningJobs.push(new wtf.Resolver())
         jobIDX = runningJobs.length - 1
-        command = splicer(job, command)
-        (async () => {
+        //command = splicer(job, command)
+        /*(async () => {
             exec(command, (error, stdout, stderr) => {
                 runningJobs[jobIDX].resolve = resolver(error, stdout, stderr)
                 runningJobs[jobIDX].reject = rejector(error, stdout, stderr)
             })
-        })
+        })*/
     })
-    return Promise.all(runningJobs)
+    return await Promise.all(runningJobs).then(res => { return res })
 }
 
 /*
@@ -54,10 +54,16 @@ process.stdout.write(`${wtf.colors.CYAN}System Backup Script${wtf.colors.CLEAR}\
 
 const settings = wtf.loadSettings(`${constants.SETTINGS_LOCATION}/${constants.SETTINGS_FILE}`)
 
-// verify jobs format
-// verify backup_command
+//  Verify jobs format
+if(!settings['jobs']) wtf.scriptError(`No Jobs defined.`)
+settings['jobs'].forEach((job, IDX) => {
+    if(job['name'] === undefined && job['location'] === undefined)
+        wtf.scriptError(`Job ${IDX} incorrect format.`)
+})
+//  Verify backup_command
+if(!settings['backup_command']) wtf.scriptError(`No backup command defined.`)
 
-const jobResults = await jobRunner(settings['jobs'], settings[backup_command],
+const jobResults = jobRunner(settings['jobs'], settings['backup_command'],
     (job, backup_command) => {
         // do command splicing
         return backup_command
@@ -70,13 +76,15 @@ const jobResults = await jobRunner(settings['jobs'], settings[backup_command],
     }
 )
 
+// do stuff with results
+
+//  Log last run time
 try {
     fs.unlinkSync(`${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`)
-} catch (err) {}
-
-fs.appendFileSync(
-    `${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`,
-    new Date().toString()
-)
+    fs.appendFileSync(
+        `${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`,
+        new Date().toString()
+    )
+} catch (err) { wtf.scriptError(err) }
 
 process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
