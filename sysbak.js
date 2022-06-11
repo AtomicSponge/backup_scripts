@@ -32,16 +32,15 @@ const constants = {
  * @returns {Array} An array of results for each job
  */
 const jobRunner = async (jobs, command, splicer, resolver, rejector) => {
-    console.log(splicer)
     var runningJobs = []
     jobs.forEach(job => {
         runningJobs.push(new wtf.Resolver())
         jobIDX = runningJobs.length - 1
-        //command = splicer(job, command)
+        command = splicer(job, command)
         {(async () => {
             exec(command, (error, stdout, stderr) => {
-                runningJobs[jobIDX].resolve = resolver(error, stdout, stderr)
-                runningJobs[jobIDX].reject = rejector(error, stdout, stderr)
+                if(error) runningJobs[jobIDX].reject = rejector(error, stdout, stderr)
+                runningJobs[jobIDX].resolve = resolver(stdout)
             })
         })()}
     })
@@ -67,17 +66,21 @@ if(!settings['backup_command']) wtf.scriptError(`No backup command defined.`)
 const jobResults = jobRunner(settings['jobs'], settings['backup_command'],
     (job, backup_command) => {
         // do command splicing
-        return backup_command
+        //return backup_command
+        return 'ls'
     },
-    (error, stdout, stderr) => {
+    (stdout) => {
         // resolver
+        return true
     },
     (error, stdout, stderr) => {
         // rejector
+        return false
     }
 )
 
 // do stuff with results
+console.log(jobResults)
 
 //  Log last run time
 try {
