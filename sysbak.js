@@ -65,7 +65,7 @@ if(!settings['backup_command']) wtf.scriptError(`No backup command defined.`)
 
 const jobResults = jobRunner(settings['jobs'], settings['backup_command'],
     (job, backup_command) => {
-        // do command splicing
+        backup_command.replaceAll('$BACKUP_LOCATION', job['location'])
         //return backup_command
         return 'ls'
     },
