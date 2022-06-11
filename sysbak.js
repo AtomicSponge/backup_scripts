@@ -37,12 +37,10 @@ const jobRunner = async (jobs, command, splicer, resolver, rejector) => {
         runningJobs.push(new wtf.Resolver())
         jobIDX = runningJobs.length - 1
         command = splicer(job, command)
-        {(async () => {
-            exec(command, (error, stdout, stderr) => {
-                if(error) runningJobs[jobIDX].reject = rejector(error, stdout, stderr)
-                runningJobs[jobIDX].resolve = resolver(stdout)
-            })
-        })()}
+        exec(command, (error, stdout, stderr) => {
+            if(error) runningJobs[jobIDX].reject = rejector(error, stdout, stderr)
+            runningJobs[jobIDX].resolve = resolver(stdout)
+        })
     })
     return await Promise.all(runningJobs).then(res => { return res })
 }
