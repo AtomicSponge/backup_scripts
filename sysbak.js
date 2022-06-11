@@ -32,17 +32,18 @@ const constants = {
  * @returns {Array} An array of results for each job
  */
 const jobRunner = async (jobs, command, splicer, resolver, rejector) => {
+    console.log(splicer)
     var runningJobs = []
     jobs.forEach(job => {
         runningJobs.push(new wtf.Resolver())
         jobIDX = runningJobs.length - 1
         //command = splicer(job, command)
-        /*(async () => {
+        {(async () => {
             exec(command, (error, stdout, stderr) => {
                 runningJobs[jobIDX].resolve = resolver(error, stdout, stderr)
                 runningJobs[jobIDX].reject = rejector(error, stdout, stderr)
             })
-        })*/
+        })()}
     })
     return await Promise.all(runningJobs).then(res => { return res })
 }
