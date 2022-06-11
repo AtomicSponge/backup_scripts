@@ -23,10 +23,13 @@ const constants = {
 }
 
 /**
- * Job runner
- * @param {Array} jobs 
- * @param {String} command 
- * @param {Function} splicer 
+ * Job runner - wraps exec in a promise array and runs all jobs
+ * @param {Array} jobs An array of jobs to run
+ * @param {String} command The system command to run
+ * @param {Function} splicer The splicer function to edit the command
+ * @param {Function} resolver Promise resolver function
+ * @param {Function} rejector Promise rejector function
+ * @returns {Array} An array of promises for each job
  */
 const jobRunner = async (jobs, command, splicer, resolver, rejector) => {
     var runningJobs = []
