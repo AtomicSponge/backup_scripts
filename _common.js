@@ -44,3 +44,17 @@ const loadSettings = (SETTINGS_FILE, noerror) => {
     }
 }
 exports.loadSettings = loadSettings
+
+/**
+ * Resolver class
+ * Wraps a promise
+ */
+class Resolver {
+	constructor() {
+		this.promise = new Promise((resolve, reject) => {
+			this.reject = reject
+			this.resolve = resolve
+		})
+	}
+}
+exports.Resolver = Resolver

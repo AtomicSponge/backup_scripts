@@ -21,6 +21,30 @@ const constants = {
     LASTRUN_FILE: `lastrun`
 }
 
+/**
+ * Job runner
+ * @param {Array} jobs 
+ * @param {String} backup_command 
+ */
+const jobRunner = async (jobs, backup_command) => {
+    var runningJobs = []
+    jobs.forEach(job => {
+        runningJobs.push(new wtf.Resolver())
+        jobIDX = runningJobs.length - 1
+        (async () => {
+            exec(backup_command, (error, stdout, stderr) => {
+                runningJobs[jobIDX].resolve(() => {
+                    // do resolve
+                })
+                runningJobs[jobIDX].reject(() => {
+                    // // do reject
+                })
+            })
+        })
+    })
+    return Promise.all(runningJobs)
+}
+
 /*
  * Main script
  */
@@ -28,11 +52,10 @@ process.stdout.write(`${wtf.colors.CYAN}System Backup Script${wtf.colors.CLEAR}\
 
 const settings = wtf.loadSettings(`${constants.SETTINGS_LOCATION}/${constants.SETTINGS_FILE}`)
 
-settings['jobs'].forEach(job => {
-    exec(settings['backup_command'], (error, stdout, stderr) => {
-        //
-    })
-})
+// verify jobs format
+// verify backup_command
+
+const jobResults = await jobRunner(settings['jobs'], settings[backup_command])
 
 try {
     fs.unlinkSync(`${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`)
