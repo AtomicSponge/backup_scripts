@@ -33,6 +33,8 @@ exports.scriptError = scriptError
 
 /**
  * Load local settings file
+ * @param {String} SETTINGS_FILE File to load
+ * @param {boolean} noerror Pass true to ignore the script error
  * @returns Settings JSON object
  * @throws Error on fail then exits script
  */
