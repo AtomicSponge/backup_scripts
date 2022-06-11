@@ -18,28 +18,26 @@ const constants = {
     SETTINGS_FILE: `_config.json`,
     SETTINGS_LOCATION: `${os.homedir()}/.sysbak`,
     LOG_LOCATION: `${os.homedir()}/.sysbak/log`,
+    SYSBAK_LOG: `sysbak.log`,
     LASTRUN_FILE: `lastrun`
 }
 
 /**
  * Job runner
  * @param {Array} jobs 
- * @param {String} backup_command 
+ * @param {String} command 
+ * @param {Function} splicer 
  */
-const jobRunner = async (jobs, backup_command) => {
+const jobRunner = async (jobs, command, splicer, resolver, rejector) => {
     var runningJobs = []
     jobs.forEach(job => {
         runningJobs.push(new wtf.Resolver())
         jobIDX = runningJobs.length - 1
-        // splice backup_command with job array data
+        command = splicer(job, command)
         (async () => {
-            exec(backup_command, (error, stdout, stderr) => {
-                runningJobs[jobIDX].resolve(() => {
-                    // do resolve
-                })
-                runningJobs[jobIDX].reject(() => {
-                    // // do reject
-                })
+            exec(command, (error, stdout, stderr) => {
+                runningJobs[jobIDX].resolve = resolver(error, stdout, stderr)
+                runningJobs[jobIDX].reject = rejector(error, stdout, stderr)
             })
         })
     })
@@ -56,7 +54,18 @@ const settings = wtf.loadSettings(`${constants.SETTINGS_LOCATION}/${constants.SE
 // verify jobs format
 // verify backup_command
 
-const jobResults = await jobRunner(settings['jobs'], settings[backup_command])
+const jobResults = await jobRunner(settings['jobs'], settings[backup_command],
+    (job, backup_command) => {
+        // do command splicing
+        return backup_command
+    },
+    (error, stdout, stderr) => {
+        // resolver
+    },
+    (error, stdout, stderr) => {
+        // rejector
+    }
+)
 
 try {
     fs.unlinkSync(`${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`)
