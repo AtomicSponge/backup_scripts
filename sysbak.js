@@ -57,7 +57,7 @@ const settings = wtf.loadSettings(`${constants.SETTINGS_LOCATION}/${constants.SE
 //  Verify jobs format
 if(!settings['jobs']) wtf.scriptError(`No Jobs defined.`)
 settings['jobs'].forEach((job, IDX) => {
-    if(job['name'] === undefined && job['location'] === undefined)
+    if(job['name'] === undefined || job['location'] === undefined)
         wtf.scriptError(`Job ${IDX} incorrect format.`)
 })
 //  Verify backup_command
