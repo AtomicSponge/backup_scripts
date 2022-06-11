@@ -31,6 +31,7 @@ const jobRunner = async (jobs, backup_command) => {
     jobs.forEach(job => {
         runningJobs.push(new wtf.Resolver())
         jobIDX = runningJobs.length - 1
+        // splice backup_command with job array data
         (async () => {
             exec(backup_command, (error, stdout, stderr) => {
                 runningJobs[jobIDX].resolve(() => {
