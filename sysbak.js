@@ -27,22 +27,21 @@ const constants = {
  * @param {Array} jobs An array of jobs to run
  * @param {String} command The system command to run
  * @param {Function} splicer The splicer function to edit the command
- * @param {Function} resolver Promise resolver function
- * @param {Function} rejector Promise rejector function
- * @returns {Array} An array of results for each job
+ * @param {Function} callback Command callback
  */
-const jobRunner = async (jobs, command, splicer, resolver, rejector) => {
+const jobRunner = async (jobs, command, splicer, callback) => {
     var runningJobs = []
     jobs.forEach(job => {
         runningJobs.push(new wtf.Resolver())
         jobIDX = runningJobs.length - 1
         command = splicer(job, command)
         exec(command, (error, stdout, stderr) => {
-            if(error) runningJobs[jobIDX].reject = rejector(error, stdout, stderr)
-            runningJobs[jobIDX].resolve = resolver(stdout)
+            callback(error, stdout, stderr)
+            if(error) runningJobs[jobIDX].reject(false)
+            runningJobs[jobIDX].resolve(true)
         })
     })
-    return await Promise.all(runningJobs).then(res => { return res })
+    await Promise.allSettled(runningJobs).then(res => console.log(res))
 }
 
 /*
@@ -61,24 +60,16 @@ settings['jobs'].forEach((job, IDX) => {
 //  Verify backup_command
 if(!settings['backup_command']) wtf.scriptError(`No backup command defined.`)
 
-const jobResults = jobRunner(settings['jobs'], settings['backup_command'],
+jobRunner(settings['jobs'], settings['backup_command'],
     (job, backup_command) => {
         backup_command.replaceAll('$BACKUP_LOCATION', job['location'])
         //return backup_command
         return 'ls'
     },
-    (stdout) => {
-        // resolver
-        return true
-    },
     (error, stdout, stderr) => {
-        // rejector
-        return false
+        console.log('callback')
     }
 )
-
-// do stuff with results
-console.log(jobResults)
 
 //  Log last run time
 try {
