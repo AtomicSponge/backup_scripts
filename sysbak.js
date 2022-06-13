@@ -36,12 +36,19 @@ const jobRunner = async (jobs, command, splicer, callback) => {
         jobIDX = runningJobs.length - 1
         command = splicer(job, command)
         exec(command, (error, stdout, stderr) => {
-            if(error) runningJobs[jobIDX].reject(stderr)
-            else runningJobs[jobIDX].resolve(stdout)
+            if(error) runningJobs[jobIDX].reject({ name: job['name'], code: error.code, stdout: stdout, stderr: stderr })
+            else runningJobs[jobIDX].resolve({ name: job['name'], code: 0, stdout: stdout, stderr: stderr })
             callback(error, stdout, stderr)
         })
     })
-    return await Promise.allSettled(runningJobs)
+    var jobResults = []
+    await wtf.asyncForEach(runningJobs, async (job) => {
+        console.log(job)
+        await job.promise.then(res => jobResults.push(res)).catch(res => jobResults.push(res))
+        console.log('job done')
+    })
+    console.log(jobResults)
+    return jobResults
 }
 
 /*
@@ -69,15 +76,15 @@ jobRunner(settings['jobs'], settings['backup_command'],
     (error, stdout, stderr) => {
         console.log('callback')
     }
-).then(() => {
-    //  Log last run time
-    try {
-        fs.unlinkSync(`${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`)
-        fs.appendFileSync(
-            `${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`,
-            new Date().toString()
-        )
-    } catch (err) { wtf.scriptError(err) }
+)
 
-    process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
-})
+//  Log last run time
+try {
+    fs.unlinkSync(`${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`)
+    fs.appendFileSync(
+        `${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`,
+        new Date().toString()
+    )
+} catch (err) { wtf.scriptError(err) }
+
+process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
