@@ -22,7 +22,6 @@ const constants = {
     LASTRUN_FILE: `lastrun`
 }
 
-var runningJobs = []  //  Store the running jobs in a global var
 /**
  * Job runner - wraps exec in a promise array and runs all jobs
  * @param {Array} jobs An array of jobs to run
@@ -44,6 +43,7 @@ const jobRunner = async (jobs, command, splicer, callback) => {
         }
     }
     //  Run all the jobs, resolve/reject promise once done
+    var runningJobs = []
     jobs.forEach(job => {
         runningJobs.push(new Resolver())
         const jobIDX = runningJobs.length - 1
