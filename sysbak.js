@@ -32,10 +32,18 @@ var runningJobs = []
  * @return {Promise} Result of all jobs
  */
 const jobRunner = async (jobs, command, splicer, callback) => {
+    class Resolver {
+        constructor() {
+            this.promise = new Promise((resolve, reject) => {
+                this.reject = reject
+                this.resolve = resolve
+            })
+        }
+    }
     splicer = splicer || (() => { return command })
     callback = callback || (() => {})
     jobs.forEach(job => {
-        runningJobs.push(new wtf.Resolver())
+        runningJobs.push(new Resolver())
         const jobIDX = runningJobs.length - 1
         command = splicer(job, command)
         exec(command, (error, stdout, stderr) => {
