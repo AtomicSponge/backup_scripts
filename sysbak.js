@@ -93,6 +93,7 @@ jobRunner(settings['jobs'], settings['backup_command'],
         if(settings['cmdVars'] instanceof Array) settings['cmdVars'].forEach(cmdVar => {
             backup_command.replaceAll(cmdVar['variable'], cmdVar['value'])
         })
+        //console.log(backup_command)
         return backup_command
     }
 ).then((jobResults) => {
@@ -110,8 +111,8 @@ jobRunner(settings['jobs'], settings['backup_command'],
         var errorMsg = 'The following jobs failed:\n\n'
         failedJobs.forEach(job => {
             errorMsg += `==============================\n\n`
-            errorMsg += `Job: '${job.name}'\tCode: ${job.code}\nCommand: ${job.command}\n`
-            errorMsg += `Reason:\n${job.error}\n`
+            errorMsg += `Job: '${job.name}'\tCode: ${job.code}\n\nCommand: ${job.command}`
+            errorMsg += `\n\nReason:\n${job.error}\n`
         })
         wtf.scriptError(errorMsg)
     }
