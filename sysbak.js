@@ -32,6 +32,8 @@ var runningJobs = []
  * @return {Promise} Result of all jobs
  */
 const jobRunner = async (jobs, command, splicer, callback) => {
+    splicer = splicer || (() => { return command })
+    callback = callback || (() => {})
     jobs.forEach(job => {
         runningJobs.push(new wtf.Resolver())
         var jobIDX = runningJobs.length - 1
@@ -66,11 +68,8 @@ if(!settings['backup_command']) wtf.scriptError(`No backup command defined.`)
 jobRunner(settings['jobs'], settings['backup_command'],
     (job, backup_command) => {
         backup_command.replaceAll('$BACKUP_LOCATION', job['location'])
-        //return backup_command
-        return 'ls'
-    },
-    (error, stdout, stderr) => {
-        console.log('callback')
+        backup_command.replaceAll('$LOG_LOCATION', constants.LOG_LOCATION)
+        return backup_command
     }
 ).then((jobResults) => {
     //  Check for any failed jobs
