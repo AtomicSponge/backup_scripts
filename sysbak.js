@@ -65,6 +65,8 @@ settings['jobs'].forEach((job, IDX) => {
 //  Verify backup_command
 if(!settings['backup_command']) wtf.scriptError(`No backup command defined.`)
 
+process.stdout.write(`Running backup jobs, please wait...  `)
+
 jobRunner(settings['jobs'], settings['backup_command'],
     (job, backup_command) => {
         backup_command.replaceAll('$BACKUP_LOCATION', job['location'])
@@ -97,5 +99,5 @@ jobRunner(settings['jobs'], settings['backup_command'],
         )
     } catch (err) { wtf.scriptError(err) }
 
-    process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
+    process.stdout.write(`${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
 })
