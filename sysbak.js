@@ -36,7 +36,7 @@ const jobRunner = async (jobs, command, splicer, callback) => {
     callback = callback || (() => {})
     jobs.forEach(job => {
         runningJobs.push(new wtf.Resolver())
-        var jobIDX = runningJobs.length - 1
+        const jobIDX = runningJobs.length - 1
         command = splicer(job, command)
         exec(command, (error, stdout, stderr) => {
             if(error) runningJobs[jobIDX].reject({ name: job['name'], code: error.code, stdout: stdout, stderr: stderr })
