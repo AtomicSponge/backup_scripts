@@ -23,7 +23,6 @@ const constants = {
 }
 
 var runningJobs = []
-var jobPromises = []
 /**
  * Job runner - wraps exec in a promise array and runs all jobs
  * @param {Array} jobs An array of jobs to run
@@ -42,6 +41,7 @@ const jobRunner = async (jobs, command, splicer, callback) => {
             callback(error, stdout, stderr)
         })
     })
+    var jobPromises = []
     runningJobs.forEach(job => { jobPromises.push(job.promise) })
     return await Promise.allSettled(jobPromises)
 }
@@ -71,17 +71,15 @@ jobRunner(settings['jobs'], settings['backup_command'],
     (error, stdout, stderr) => {
         console.log('callback')
     }
-).then((res) => { console.log(res)})
-//console.log(jobResults)
-//jobResults.then(() => { console.log('jobs done')})
+).then((res) => {
+    //  Log last run time
+    try {
+        fs.unlinkSync(`${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`)
+        fs.appendFileSync(
+            `${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`,
+            new Date().toString()
+        )
+    } catch (err) { wtf.scriptError(err) }
 
-//  Log last run time
-try {
-    fs.unlinkSync(`${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`)
-    fs.appendFileSync(
-        `${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`,
-        new Date().toString()
-    )
-} catch (err) { wtf.scriptError(err) }
-
-process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
+    process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
+})
