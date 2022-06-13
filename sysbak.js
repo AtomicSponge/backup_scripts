@@ -22,7 +22,7 @@ const constants = {
     LASTRUN_FILE: `lastrun`
 }
 
-var runningJobs = []
+var runningJobs = []  //  Store the running jobs in a global var
 /**
  * Job runner - wraps exec in a promise array and runs all jobs
  * @param {Array} jobs An array of jobs to run
