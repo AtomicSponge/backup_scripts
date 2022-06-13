@@ -29,6 +29,7 @@ var runningJobs = []
  * @param {String} command The system command to run
  * @param {Function} splicer The splicer function to edit the command
  * @param {Function} callback Command callback
+ * @return {Promise} Result of all jobs
  */
 const jobRunner = async (jobs, command, splicer, callback) => {
     jobs.forEach(job => {
