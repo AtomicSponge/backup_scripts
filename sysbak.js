@@ -83,15 +83,15 @@ process.stdout.write(`Running backup jobs, please wait...  `)
 // Run all jobs, splicing in the command variables
 jobRunner(settings['jobs'], settings['backup_command'],
     (job, backup_command) => {
-        backup_command.replaceAll('$BACKUP_LOCATION', job['location'])
-        backup_command.replaceAll('$LOG_LOCATION', constants.LOG_LOCATION)
+        backup_command = backup_command.replaceAll('$BACKUP_LOCATION', job['location'])
+        backup_command = backup_command.replaceAll('$LOG_LOCATION', constants.LOG_LOCATION)
         //  Process job specific variables
         if(job['vars'] instanceof Array) job['vars'].forEach(cmdVar => {
-            backup_command.replaceAll(cmdVar['variable'], cmdVar['value'])
+            backup_command = backup_command.replaceAll(cmdVar['variable'], cmdVar['value'])
         })
         //  Process global variabls
         if(settings['cmdVars'] instanceof Array) settings['cmdVars'].forEach(cmdVar => {
-            backup_command.replaceAll(cmdVar['variable'], cmdVar['value'])
+            backup_command = backup_command.replaceAll(cmdVar['variable'], cmdVar['value'])
         })
         //console.log(backup_command)
         return backup_command
