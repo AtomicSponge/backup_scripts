@@ -85,7 +85,8 @@ jobRunner(settings['jobs'], settings['backup_command'],
     (job, backup_command) => {
         //  Use job specific backup command if one is defined
         if(job['backup_command']) backup_command = job['backup_command']
-        backup_command = backup_command.replaceAll('$BACKUP_LOCATION', job['location'])
+        backup_command = backup_command.replaceAll('$JOB_NAME', job['name'])
+        backup_command = backup_command.replaceAll('$JOB_LOCATION', job['location'])
         backup_command = backup_command.replaceAll('$LOG_LOCATION', constants.LOG_LOCATION)
         //  Process job specific variables
         if(job['vars'] instanceof Array) job['vars'].forEach(cmdVar => {
