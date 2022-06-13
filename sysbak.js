@@ -80,9 +80,10 @@ jobRunner(settings['jobs'], settings['backup_command'],
         }
     })
     if(failedJobs.length > 0) {
-        var errorMsg = 'The following jobs failed:\n'
+        var errorMsg = 'The following jobs failed:\n\n'
         failedJobs.forEach(job => {
-            errorMsg += `\nJob: '${job.name}'\tCode: ${job.code}\tReason:\n${job.error}\n`
+            errorMsg += `==============================\n\n`
+            errorMsg += `Job: '${job.name}'\tCode: ${job.code}\nReason:\n${job.error}\n`
         })
         wtf.scriptError(errorMsg)
     }
