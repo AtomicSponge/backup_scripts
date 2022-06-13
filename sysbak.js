@@ -83,6 +83,8 @@ process.stdout.write(`Running backup jobs, please wait...  `)
 // Run all jobs, splicing in the command variables
 jobRunner(settings['jobs'], settings['backup_command'],
     (job, backup_command) => {
+        //  Use job specific backup command if one is defined
+        if(job['backup_command']) backup_command = job['backup_command']
         backup_command = backup_command.replaceAll('$BACKUP_LOCATION', job['location'])
         backup_command = backup_command.replaceAll('$LOG_LOCATION', constants.LOG_LOCATION)
         //  Process job specific variables
