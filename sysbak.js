@@ -36,12 +36,12 @@ const jobRunner = async (jobs, command, splicer, callback) => {
         jobIDX = runningJobs.length - 1
         command = splicer(job, command)
         exec(command, (error, stdout, stderr) => {
+            if(error) runningJobs[jobIDX].reject(stderr)
+            else runningJobs[jobIDX].resolve(stdout)
             callback(error, stdout, stderr)
-            if(error) runningJobs[jobIDX].reject(false)
-            runningJobs[jobIDX].resolve(true)
         })
     })
-    await Promise.allSettled(runningJobs).then(res => console.log(res))
+    return await Promise.allSettled(runningJobs)
 }
 
 /*
@@ -64,20 +64,20 @@ jobRunner(settings['jobs'], settings['backup_command'],
     (job, backup_command) => {
         backup_command.replaceAll('$BACKUP_LOCATION', job['location'])
         //return backup_command
-        return 'ls'
+        return 'sleep 5'
     },
     (error, stdout, stderr) => {
         console.log('callback')
     }
-)
+).then(() => {
+    //  Log last run time
+    try {
+        fs.unlinkSync(`${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`)
+        fs.appendFileSync(
+            `${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`,
+            new Date().toString()
+        )
+    } catch (err) { wtf.scriptError(err) }
 
-//  Log last run time
-try {
-    fs.unlinkSync(`${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`)
-    fs.appendFileSync(
-        `${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`,
-        new Date().toString()
-    )
-} catch (err) { wtf.scriptError(err) }
-
-process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
+    process.stdout.write(`\n${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
+})
