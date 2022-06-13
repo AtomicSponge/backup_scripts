@@ -14,7 +14,7 @@ JSON
 
 __Does heavy command injection, use at your own risk!__
 
-Use a third party backup utility such as (rclone)[https://rclone.org/] and automate folder syncronization.
+Use a third party backup utility such as [rclone](https://rclone.org/) and automate folder syncronization.
 
 ```
 JSON
