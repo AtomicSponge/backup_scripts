@@ -22,6 +22,8 @@ const constants = {
     LASTRUN_FILE: `lastrun`
 }
 
+var runningJobs = []
+var jobPromises = []
 /**
  * Job runner - wraps exec in a promise array and runs all jobs
  * @param {Array} jobs An array of jobs to run
@@ -30,10 +32,9 @@ const constants = {
  * @param {Function} callback Command callback
  */
 const jobRunner = async (jobs, command, splicer, callback) => {
-    var runningJobs = []
     jobs.forEach(job => {
         runningJobs.push(new wtf.Resolver())
-        jobIDX = runningJobs.length - 1
+        var jobIDX = runningJobs.length - 1
         command = splicer(job, command)
         exec(command, (error, stdout, stderr) => {
             if(error) runningJobs[jobIDX].reject({ name: job['name'], code: error.code, stdout: stdout, stderr: stderr })
@@ -41,14 +42,8 @@ const jobRunner = async (jobs, command, splicer, callback) => {
             callback(error, stdout, stderr)
         })
     })
-    var jobResults = []
-    await wtf.asyncForEach(runningJobs, async (job) => {
-        console.log(job)
-        await job.promise.then(res => jobResults.push(res)).catch(res => jobResults.push(res))
-        console.log('job done')
-    })
-    console.log(jobResults)
-    return jobResults
+    runningJobs.forEach(job => { jobPromises.push(job.promise) })
+    return await Promise.allSettled(jobPromises)
 }
 
 /*
@@ -76,7 +71,9 @@ jobRunner(settings['jobs'], settings['backup_command'],
     (error, stdout, stderr) => {
         console.log('callback')
     }
-)
+).then((res) => { console.log(res)})
+//console.log(jobResults)
+//jobResults.then(() => { console.log('jobs done')})
 
 //  Log last run time
 try {
