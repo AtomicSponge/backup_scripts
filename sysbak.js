@@ -49,8 +49,10 @@ const jobRunner = async (jobs, command, splicer, callback) => {
         const jobIDX = runningJobs.length - 1
         command = splicer(job, command)
         exec(command, (error, stdout, stderr) => {
-            if(error) runningJobs[jobIDX].reject({ name: job['name'], code: error.code, stdout: stdout, stderr: stderr })
-            else runningJobs[jobIDX].resolve({ name: job['name'], code: 0, stdout: stdout, stderr: stderr })
+            if(error) runningJobs[jobIDX].reject(
+                { name: job['name'], code: error.code, stdout: stdout, stderr: stderr })
+            else runningJobs[jobIDX].resolve(
+                { name: job['name'], code: 0, stdout: stdout, stderr: stderr })
             callback(error, stdout, stderr)
         })
     })
