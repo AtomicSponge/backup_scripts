@@ -32,6 +32,7 @@ var runningJobs = []
  * @return {Promise} Result of all jobs
  */
 const jobRunner = async (jobs, command, splicer, callback) => {
+    //  Wrapper class for promises
     class Resolver {
         constructor() {
             this.promise = new Promise((resolve, reject) => {
