@@ -67,12 +67,27 @@ jobRunner(settings['jobs'], settings['backup_command'],
     (job, backup_command) => {
         backup_command.replaceAll('$BACKUP_LOCATION', job['location'])
         //return backup_command
-        return 'sleep 5'
+        return 'ls'
     },
     (error, stdout, stderr) => {
         console.log('callback')
     }
-).then((res) => {
+).then((jobResults) => {
+    //  Check for any failed jobs
+    var failedJobs = []
+    jobResults.forEach(job => {
+        if(job.status == 'rejected') {
+            failedJobs.push({ name: job.reason.name, code: job.reason.code, error: job.reason.stderr })
+        }
+    })
+    if(failedJobs.length > 0) {
+        var errorMsg = 'The following jobs failed:\n'
+        failedJobs.forEach(job => {
+            errorMsg += `\nJob: '${job.name}'\tCode: ${job.code}\tReason:\n${job.error}\n`
+        })
+        wtf.scriptError(errorMsg)
+    }
+
     //  Log last run time
     try {
         fs.unlinkSync(`${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`)
