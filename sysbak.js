@@ -32,6 +32,8 @@ var runningJobs = []
  * @return {Promise} Result of all jobs
  */
 const jobRunner = async (jobs, command, splicer, callback) => {
+    splicer = splicer || (() => { return command })
+    callback = callback || (() => {})
     //  Wrapper class for promises
     class Resolver {
         constructor() {
@@ -41,8 +43,7 @@ const jobRunner = async (jobs, command, splicer, callback) => {
             })
         }
     }
-    splicer = splicer || (() => { return command })
-    callback = callback || (() => {})
+    //  Run all the jobs, resolve/reject promise once done
     jobs.forEach(job => {
         runningJobs.push(new Resolver())
         const jobIDX = runningJobs.length - 1
@@ -53,6 +54,7 @@ const jobRunner = async (jobs, command, splicer, callback) => {
             callback(error, stdout, stderr)
         })
     })
+    //  Collect the promises and return once all complete
     var jobPromises = []
     runningJobs.forEach(job => { jobPromises.push(job.promise) })
     return await Promise.allSettled(jobPromises)
