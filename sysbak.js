@@ -93,7 +93,6 @@ jobRunner(settings['jobs'], settings['backup_command'],
         if(settings['cmdVars'] instanceof Array) settings['cmdVars'].forEach(cmdVar => {
             backup_command = backup_command.replaceAll(cmdVar['variable'], cmdVar['value'])
         })
-        //console.log(backup_command)
         return backup_command
     }
 ).then((jobResults) => {
