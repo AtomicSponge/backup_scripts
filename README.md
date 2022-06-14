@@ -12,6 +12,8 @@ Or per-project as a dev-dependency:
 npm i @spongex/backup_scrips --save-dev
 ```
 
+---
+
 ## Local Backup
 
 Create a local ___backup__ folder and copy the current folder to the new one.
@@ -28,6 +30,8 @@ Allows for certain files and folders to be ignored.  In the running folder, crea
     ]
 }
 ```
+
+---
 
 ## System Backup
 
