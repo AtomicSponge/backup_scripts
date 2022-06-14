@@ -23,6 +23,17 @@ const constants = {
 }
 
 /**
+ * Write a message to the log file
+ * @param {String} message String to write
+ * @throws Error on fail then exits script
+ */
+ const writeLog = (message) => {
+    try {
+        fs.appendFileSync(`${constants.LOG_LOCATION}/${constants.SYSBAK_LOG}`, message)
+    } catch (err) { scriptError(err) }
+}
+
+/**
  * Job runner - wraps exec in a promise array and runs all jobs
  * @param {Array} jobs An array of jobs to run
  * @param {String} command The system command to run
@@ -80,7 +91,14 @@ settings['jobs'].forEach((job, IDX) => {
 //  Verify backup_command
 if(!settings['backup_command']) wtf.scriptError(`No backup command defined.`)
 
+//  Remove old log file
+try{
+    fs.unlinkSync(`${constants.LOG_LOCATION}/${constants.SYSBAK_LOG}`)
+} catch (err) {}
+
 process.stdout.write(`Running backup jobs, please wait...  `)
+
+writeLog(`Backup job started at ${new Date().toString()}\n\n`)
 
 // Run all jobs, splicing in the command variables
 jobRunner(settings['jobs'], settings['backup_command'],
@@ -118,17 +136,22 @@ jobRunner(settings['jobs'], settings['backup_command'],
             errorMsg += `Job: '${job.name}'\tCode: ${job.code}\n\nCommand: ${job.command}`
             errorMsg += `\n\nReason:\n${job.error}\n`
         })
+        errorMsg += `\n${failedJobs.length} of ${jobResults.length} jobs completed with errors.`
+        writeLog(errorMsg)
         wtf.scriptError(errorMsg)
     }
 
     //  Log last run time
     try {
         fs.unlinkSync(`${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`)
+    } catch (err) {}
+    try {
         fs.appendFileSync(
             `${constants.SETTINGS_LOCATION}/${constants.LASTRUN_FILE}`,
             new Date().toString()
         )
     } catch (err) { wtf.scriptError(err) }
 
+    writeLog(`${jobResults.length} jobs completed successfully at ${new Date().toString()}`)
     process.stdout.write(`${wtf.colors.GREEN}Done!${wtf.colors.CLEAR}\n`)
 })

@@ -2,7 +2,6 @@
 
 Local and system backup scripts.  See each section for usage of each script.
 
-*(note: not yet uploaded)*
 Install globally:
 ```
 npm i -g @spongex/backup_scrips
@@ -16,7 +15,7 @@ npm i @spongex/backup_scrips --save-dev
 
 ## Local Backup
 
-Command:  *npx localbak*
+__Command:__  *npx localbak*
 
 Create a local ___backup__ folder and copy the current folder to the new one.
 
@@ -37,7 +36,7 @@ Allows for certain files and folders to be ignored.  In the running folder, crea
 
 ## System Backup
 
-Command:  *npx sysbak*
+__Command:__  *npx sysbak*
 
 __Does heavy command injection, use at your own risk!__
 
