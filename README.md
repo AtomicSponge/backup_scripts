@@ -16,6 +16,8 @@ npm i @spongex/backup_scrips --save-dev
 
 ## Local Backup
 
+Command:  *npx localbak*
+
 Create a local ___backup__ folder and copy the current folder to the new one.
 
 Allows for certain files and folders to be ignored.  In the running folder, create a file called __.localbak_config.json__ with the following format:
@@ -35,6 +37,8 @@ Allows for certain files and folders to be ignored.  In the running folder, crea
 
 ## System Backup
 
+Command:  *npx sysbak*
+
 __Does heavy command injection, use at your own risk!__
 
 See [NodeJS's documentation](https://nodejs.org/api/child_process.html#child_processexeccommand-options-callback) on [exec](https://nodejs.org/api/child_process.html#child_processexeccommand-options-callback) for more information on how commands work.
@@ -42,6 +46,10 @@ See [NodeJS's documentation](https://nodejs.org/api/child_process.html#child_pro
 Use a third party sync utility such as [rclone](https://rclone.org/) and automate folder syncronization.
 
 To use, define a command to run a sync utility and a list of jobs in a ___config.json__ file located in a __.sysbak__ folder placed in your user home directory.
+
+Two variables are required to be defined:
+- __"backup_command"__ - The sync command to run.  The script can replace variables defined in this command.
+- __"jobs"__ - An array of job objects to run.  Each job should have a __name__ and __location__ item.
 
 An exampe format is as follows:
 ```
@@ -71,6 +79,12 @@ An exampe format is as follows:
         {
             "name": "Videos",
             "location": "/home/matthew/Videos"
+            "vars" {
+                {
+                    "variable": "$EXAMPLE",
+                    "value": "this is only an example!"
+                }
+            }
         }
     ],
     "cmdVars": [
@@ -90,4 +104,13 @@ An exampe format is as follows:
 }
 ```
 
+The script has the following command variables pre-defined:
+- __$JOB_NAME__ - The name of the job from the job object
+- __$JOB_LOCATION__ - The location of the job from the job object
+- __$LOG_LOCATION__ - The location of the log files
+
 ### Additional options
+
+Additional variables can be defiend for replacement in the __backup_command__.  Either with an optional __"cmdVars"__ array or a __"vars"__ array defiend in each job.  Each command is an object that requires a __"variable"__ and __"value"__ item.  See the above example for details.
+
+Each job object can also have a __backup_command__ item that will overwrite the global defiend one.
