@@ -1,6 +1,16 @@
-# Backup Scripts
+# Backup NodeJS Scripts
 
-Local and system backup scripts
+Local and system backup scripts.  See each section for usage of each script.
+
+*(note: not yet uploaded)*
+Install globally:
+```
+npm i -g @spongex/backup_scrips
+```
+Or per-project as a dev-dependency:
+```
+npm i @spongex/backup_scrips --save-dev
+```
 
 ## Local Backup
 
