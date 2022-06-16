@@ -1,6 +1,6 @@
 {
     "name": "@spongex/backup_scripts",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Full system and folder backup scripts",
     "repository": {
         "type": "git",

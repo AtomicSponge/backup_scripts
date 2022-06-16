@@ -60,13 +60,17 @@ const jobRunner = async (jobs, command, splicer, callback) => {
         const jobIDX = runningJobs.length - 1
         const run_command = splicer(job, command)
         exec(run_command, (error, stdout, stderr) => {
-            if(error) runningJobs[jobIDX].reject(
-                { name: job['name'], command: run_command,
-                  code: error.code, stdout: stdout, stderr: stderr })
-            else runningJobs[jobIDX].resolve(
-                { name: job['name'], command: run_command,
-                  code: 0, stdout: stdout, stderr: stderr })
-            callback(error, stdout, stderr)
+            var cmdRes = null
+            if(error) {
+                cmdRes = { name: job['name'], command: run_command,
+                           code: error.code, stdout: stdout, stderr: stderr }
+                runningJobs[jobIDX].reject(cmdRes)
+            } else {
+                cmdRes = { name: job['name'], command: run_command,
+                           code: 0, stdout: stdout, stderr: stderr }
+                runningJobs[jobIDX].resolve(cmdRes)
+            }
+            callback(error, cmdRes)
         })
     })
     //  Collect the promises and return once all complete
