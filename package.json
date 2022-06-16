@@ -4,7 +4,7 @@
     "description": "Full system and folder backup scripts",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/wtfsystems/backup_scripts.git"
+        "url": "git+https://github.com/AtomicSponge/backup_scripts.git"
     },
     "keywords": [
         "backup",
@@ -15,9 +15,9 @@
     "license": "MIT",
     "url": "https://www.npmjs.com/package/@spongex/backup_scripts",
     "bugs": {
-        "url": "https://github.com/wtfsystems/backup_scripts/issues"
+        "url": "https://github.com/AtomicSponge/backup_scripts/issues"
     },
-    "homepage": "https://github.com/wtfsystems/backup_scripts#readme",
+    "homepage": "https://github.com/AtomicSponge/backup_scripts#readme",
     "bin": {
         "sysbak": "./sysbak.js",
         "localbak": "./localbak.js"
